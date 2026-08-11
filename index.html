@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LinkedIn → Booked, Qualified Calls</title>
+<meta name="description" content="Turning LinkedIn into booked, qualified calls, run as one engine with Meta and Google." />
+<meta name="theme-color" content="#222a35" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23267cf1'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#ffffff;
+    --paper-2:#f5f7fa;
+    --tint:#eef4fe;
+    --ink:#1b2430;
+    --navy:#222a35;
+    --navy-2:#2a3647;
+    --blue:#267cf1;
+    --blue-600:#1a5fd0;
+    --muted:#5c6675;
+    --muted-2:#8a93a1;
+    --line:#e7eaef;
+    --line-2:#d9dee5;
+    --brand:linear-gradient(90deg,#267cf1 0%,#22c1d6 22%,#3ad29f 42%,#f5c451 62%,#ff6b8a 80%,#a15cff 100%);
+    --r:10px;
+    --maxw:1140px;
+    --head:'Poppins',system-ui,sans-serif;
+    --body:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--paper);color:var(--ink);font-family:var(--body);line-height:1.55;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+  .brandbar{height:4px;background:var(--brand)}
+  .wrap{max-width:var(--maxw);margin:0 auto;padding:0 28px}
+  h1,h2,h3,h4{font-family:var(--head);letter-spacing:-.02em}
+  .mono{font-family:var(--body);font-size:11.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#6c7683}
+  .accent{color:var(--blue)}
+  .gt{background:var(--brand);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:transparent}
+
+  /* top nav-ish label row */
+  .topline{display:flex;align-items:center;justify-content:space-between;padding:22px 0;border-bottom:1px solid var(--line)}
+  .topline .logo{display:flex;align-items:center;gap:11px;font-family:var(--head);font-weight:600;font-size:15px;color:var(--ink)}
+  .topline .mark{width:22px;height:22px;border-radius:6px;background:var(--brand)}
+  .topline .r{font-size:12px;color:var(--muted);font-weight:500}
+
+  /* HERO - compact */
+  .hero{padding:56px 0 26px}
+  .hero .grid{display:grid;grid-template-columns:1.35fr .85fr;gap:44px;align-items:center}
+  .hero h1{font-size:clamp(30px,4.3vw,50px);line-height:1.05;font-weight:600;color:var(--ink);max-width:15ch}
+  .hero h1 .thin{font-weight:300;color:var(--muted)}
+  .hero p{margin-top:18px;font-size:clamp(15.5px,1.6vw,18px);color:var(--muted);max-width:48ch}
+  .hero p b{color:var(--ink);font-weight:600}
+  .hero .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px;align-items:center}
+  .btn{display:inline-flex;align-items:center;gap:9px;padding:13px 22px;border-radius:8px;font-weight:600;font-size:14.5px;text-decoration:none;font-family:var(--head);cursor:pointer;transition:transform .16s ease,background .16s ease,box-shadow .16s ease;border:1px solid transparent}
+  .btn-primary{background:var(--blue);color:#fff;box-shadow:0 8px 20px -8px rgba(38,124,241,.6)}
+  .btn-primary:hover{background:var(--blue-600);transform:translateY(-1px)}
+  .btn-ghost{color:var(--ink);border-color:var(--line-2);background:#fff}
+  .btn-ghost:hover{border-color:var(--muted-2);transform:translateY(-1px)}
+  /* hero side card (navy, dense) */
+  .snap{background:var(--navy);color:#fff;border-radius:14px;padding:26px 24px;box-shadow:0 24px 50px -24px rgba(34,42,53,.55)}
+  .snap .st{font-family:var(--body);font-size:11px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:#8fa0b6;margin-bottom:16px}
+  .snap .row{display:flex;justify-content:space-between;align-items:baseline;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.09)}
+  .snap .row:last-child{border-bottom:none;padding-bottom:0}
+  .snap .row:first-of-type{padding-top:0}
+  .snap .k{font-size:14px;color:#cdd5df}
+  .snap .v{font-family:var(--head);font-weight:600;font-size:14.5px;color:#fff}
+  .snap .v.on{color:#5ee0b0}
+  .snap .v.off{color:#ff8a9c}
+
+  /* generic section */
+  .sec{padding:58px 0;border-top:1px solid var(--line)}
+  .sec.alt{background:var(--paper-2)}
+  .sec .lead{max-width:60ch;margin-bottom:34px}
+  .sec h2{font-size:clamp(24px,3.2vw,38px);line-height:1.1;font-weight:600;color:var(--ink)}
+  .sec h2 .thin{font-weight:300;color:var(--muted)}
+  .sec .sub{margin-top:13px;font-size:16px;color:var(--muted);max-width:58ch}
+
+  /* CORE */
+  .core{padding:70px 0;background:var(--tint);border-top:1px solid var(--line);border-bottom:1px solid var(--line);position:relative}
+  .core::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--brand)}
+  .core .kick{color:var(--blue)}
+  .core h2{font-size:clamp(26px,3.9vw,44px);line-height:1.06;font-weight:600;margin:14px 0 12px;max-width:20ch;color:var(--ink)}
+  .core h2 b{font-weight:700}
+  .core .sub{color:var(--muted);font-size:clamp(15.5px,1.7vw,18px);max-width:60ch}
+
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:32px 0 8px}
+  .cmp .c{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:24px}
+  .cmp .c.no{border-top:3px solid #ff6b8a}
+  .cmp .c.yes{border-top:3px solid var(--blue);background:#fff}
+  .cmp .tag{font-family:var(--body);font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+  .cmp .no .tag{color:#e04766}
+  .cmp .yes .tag{color:var(--blue)}
+  .cmp h3{font-size:20px;font-weight:600;margin-bottom:7px}
+  .cmp p{font-size:14.5px;color:var(--muted)}
+
+  .flowlab{text-align:center;margin:38px 0 16px}
+  .pipe{display:grid;grid-template-columns:repeat(5,1fr);background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  .stg{position:relative;padding:22px 18px;border-right:1px solid var(--line)}
+  .stg:last-child{border-right:none}
+  .stg .n{font-family:var(--head);font-weight:700;font-size:13px;color:var(--muted-2)}
+  .stg h4{font-size:15.5px;font-weight:600;margin:9px 0 7px;line-height:1.2;color:var(--ink)}
+  .stg p{font-size:13px;color:var(--muted);line-height:1.45}
+  .stg.key{background:var(--navy);color:#fff}
+  .stg.key .n{color:#7fb0ff}
+  .stg.key h4{color:#fff}
+  .stg.key p{color:#c6cfda}
+  .stg.key .chip{display:inline-block;font-family:var(--body);font-size:11px;font-weight:600;color:#fff;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:3px 9px;margin:5px 5px 0 0}
+  .stg .arw{position:absolute;right:-8px;top:50%;transform:translateY(-50%);width:16px;height:16px;color:var(--blue);z-index:3;background:#fff;border-radius:50%}
+  .stg.key .arw{background:var(--navy)}
+
+  .scard{margin-top:22px;background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:24px}
+  .scard .t{color:var(--blue)}
+  .sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:16px}
+  .sgrid .s{padding:4px 20px;border-left:1px solid var(--line)}
+  .sgrid .s:first-child{padding-left:0;border-left:none}
+  .sgrid .s .l{font-family:var(--head);font-weight:600;font-size:15.5px;margin-bottom:5px;color:var(--ink)}
+  .sgrid .s .d{font-size:13px;color:var(--muted)}
+
+  /* diagnosis - numbered editorial */
+  .diag{display:grid;grid-template-columns:1fr 1fr;gap:0}
+  .diag .d{padding:26px 30px;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+  .diag .d:nth-child(-n+2){border-top:none}
+  .diag .d:nth-child(odd){border-left:none;padding-left:0}
+  .diag .d .n{font-family:var(--head);font-weight:700;font-size:14px;color:var(--blue)}
+  .diag .d h3{font-size:18px;font-weight:600;margin:8px 0 7px;color:var(--ink)}
+  .diag .d p{font-size:14.5px;color:var(--muted);max-width:44ch}
+
+  /* channels */
+  .chan{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .chan .c{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:24px;border-top:3px solid var(--blue)}
+  .chan .c .role{font-family:var(--body);font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--blue);margin-bottom:11px}
+  .chan .c h3{font-size:19px;font-weight:600;margin-bottom:7px}
+  .chan .c p{font-size:14px;color:var(--muted)}
+  .note{margin-top:18px;padding:18px 22px;background:var(--navy);color:#cfd7e1;border-radius:var(--r);font-size:14.5px}
+  .note b{color:#fff}
+
+  /* plan */
+  .plan{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .ph{background:#fff;border:1px solid var(--line);border-radius:var(--r);padding:24px}
+  .ph .w{font-family:var(--body);font-size:11.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted-2)}
+  .ph .bar{height:3px;width:44px;background:var(--brand);border-radius:3px;margin:12px 0 14px}
+  .ph h3{font-size:18px;font-weight:600;margin-bottom:13px}
+  .ph ul{list-style:none;display:flex;flex-direction:column;gap:10px}
+  .ph li{font-size:13.8px;color:var(--muted);padding-left:22px;position:relative;line-height:1.45}
+  .ph li::before{content:"";position:absolute;left:0;top:6px;width:9px;height:9px;border-radius:2px;background:var(--blue)}
+
+  /* close */
+  .close{padding:0 0 70px}
+  .close .card{background:var(--navy);color:#fff;border-radius:18px;padding:clamp(32px,4.6vw,58px);position:relative;overflow:hidden}
+  .close .card::before{content:"";position:absolute;top:0;left:0;right:0;height:4px;background:var(--brand)}
+  .close .offer{display:inline-flex;align-items:center;gap:9px;font-family:var(--body);font-size:12.5px;font-weight:600;color:#9fe7c6;border:1px solid rgba(94,224,176,.35);background:rgba(94,224,176,.08);padding:8px 14px;border-radius:30px;margin-bottom:22px}
+  .close h2{font-size:clamp(26px,3.9vw,42px);font-weight:600;line-height:1.08;max-width:20ch;margin-bottom:15px}
+  .close p{color:#c6cfda;font-size:clamp(15px,1.7vw,18px);max-width:56ch;margin-bottom:26px}
+  .close .btn-primary{box-shadow:0 10px 26px -10px rgba(38,124,241,.8)}
+
+  footer{padding:26px 0;border-top:1px solid var(--line);color:var(--muted-2);font-size:12.5px}
+
+  .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s cubic-bezier(.16,1,.3,1),transform .6s cubic-bezier(.16,1,.3,1)}
+  .reveal.in{opacity:1;transform:none}
+
+  @media(max-width:900px){
+    .hero .grid{grid-template-columns:1fr;gap:28px}
+    .pipe{grid-template-columns:1fr}
+    .stg{border-right:none;border-bottom:1px solid var(--line)}
+    .stg:last-child{border-bottom:none}
+    .stg .arw{right:auto;left:50%;top:auto;bottom:-8px;transform:translateX(-50%) rotate(90deg)}
+    .sgrid{grid-template-columns:1fr 1fr;gap:16px}
+    .sgrid .s{border-left:none;padding:0}
+  }
+  @media(max-width:680px){
+    .cmp,.diag,.chan,.plan{grid-template-columns:1fr}
+    .diag .d{border-left:none!important;padding:22px 0!important;border-top:1px solid var(--line)!important}
+    .diag .d:first-child{border-top:none!important}
+    .hero{padding:40px 0 20px}
+  }
+  @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+</style>
+<noscript><style>.reveal{opacity:1!important;transform:none!important}</style></noscript>
+</head>
+<body>
+<div class="brandbar"></div>
+<div class="wrap">
+  <div class="topline">
+    <div class="logo"><span class="mark"></span>B2B Pipeline Blueprint</div>
+    <div class="r mono">LinkedIn · Meta · Google</div>
+  </div>
+</div>
+
+<!-- HERO (compact) -->
+<header class="hero">
+  <div class="wrap">
+    <div class="grid">
+      <div class="reveal">
+        <span class="mono">Lead generation, built for booked calls</span>
+        <h1 style="margin-top:14px">Fewer leads. <span class="thin">More</span> booked, qualified calls.</h1>
+        <p>You can already generate leads. The gap is getting the right people onto a call worth your reps' time, <b>and finally making LinkedIn produce instead of sitting there as a line item.</b></p>
+        <div class="cta">
+          <a href="#core" class="btn btn-primary">See the call engine
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </a>
+          <a href="#plan" class="btn btn-ghost">First 90 days</a>
+        </div>
+      </div>
+      <div class="snap reveal">
+        <div class="st">The channels, honestly</div>
+        <div class="row"><span class="k">Meta &amp; Google</span><span class="v on">Running</span></div>
+        <div class="row"><span class="k">LinkedIn as a channel</span><span class="v off">Underused</span></div>
+        <div class="row"><span class="k">Leads → qualified calls</span><span class="v off">Leaky</span></div>
+        <div class="row"><span class="k">One integrated engine</span><span class="v on">The fix</span></div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- CORE -->
+<section class="core" id="core">
+  <div class="wrap">
+    <div class="lead reveal">
+      <span class="mono kick">The gap every other approach misses</span>
+      <h2>A lead and a booked, qualified call are <b>two different things</b>.</h2>
+      <p class="sub">Most campaigns produce the first and quietly hope for the second. The result is a full inbox and an empty calendar. This engine is built backwards from the only outcome that matters: a call your reps are glad they took.</p>
+    </div>
+
+    <div class="cmp reveal">
+      <div class="c no">
+        <div class="tag">✕ What you get elsewhere</div>
+        <h3>A pile of leads</h3>
+        <p>Form fills, downloads, cheap cost-per-lead. Reps burn the day chasing people who were never a fit, never had budget, never intended to buy. Pipeline stays flat.</p>
+      </div>
+      <div class="c yes">
+        <div class="tag">✓ What this engine produces</div>
+        <h3>Booked, qualified calls</h3>
+        <p>Fewer names, far higher value. Every call has already cleared a fit, authority, budget and intent bar, so reps walk into conversations worth their time and close rate climbs.</p>
+      </div>
+    </div>
+
+    <div class="flowlab mono reveal">How a stranger becomes a sales-ready call</div>
+    <div class="pipe reveal">
+      <div class="stg">
+        <div class="n">01</div><h4>Reach the right person</h4>
+        <p>Precise ICP targeting on LinkedIn by role, seniority, company profile and buying signal.</p>
+        <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="stg">
+        <div class="n">02</div><h4>Offer worth a reply</h4>
+        <p>A reason to talk built around their outcome, not our pitch. Starts a conversation, not an email grab.</p>
+        <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="stg key">
+        <div class="n">03</div><h4>Qualify before booking</h4>
+        <p>The filter that changes everything. Only real fits pass.</p>
+        <span class="chip">Fit</span><span class="chip">Authority</span><span class="chip">Budget</span><span class="chip">Intent</span>
+        <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="stg">
+        <div class="n">04</div><h4>Book &amp; confirm</h4>
+        <p>Straight onto a rep's calendar with reminders and a pre-call brief, engineered to cut no-shows.</p>
+        <svg class="arw" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <div class="stg">
+        <div class="n">05</div><h4>Hand off sales-ready</h4>
+        <p>The rep gets context, not a cold name, so the call opens warm and moves toward a decision.</p>
+      </div>
+    </div>
+
+    <div class="scard reveal">
+      <span class="mono t">What "qualified" actually means here</span>
+      <div class="sgrid">
+        <div class="s"><div class="l">Fit</div><div class="d">Matches the accounts you actually win and keep.</div></div>
+        <div class="s"><div class="l">Authority</div><div class="d">Can bring the decision, or bring the decision-maker.</div></div>
+        <div class="s"><div class="l">Budget</div><div class="d">The spend to solve it is real and available.</div></div>
+        <div class="s"><div class="l">Intent</div><div class="d">A live reason to act now, not a someday-maybe.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DIAGNOSIS -->
+<section class="sec">
+  <div class="wrap">
+    <div class="lead reveal">
+      <h2>Why LinkedIn has <span class="thin">sat still</span> for you.</h2>
+      <p class="sub">It was never a targeting problem alone. Four things quietly hold the channel back, and each one is fixable.</p>
+    </div>
+    <div class="diag">
+      <div class="d reveal"><div class="n">01</div><h3>LinkedIn ran as a checkbox, not a channel</h3><p>It sat in the plan as a line item with no engine behind it, so it produced activity, never qualified calls.</p></div>
+      <div class="d reveal"><div class="n">02</div><h3>The funnel captures clicks, not conversations</h3><p>Interest has nowhere clean to land. Without a real path to a scheduled call, warm prospects cool off.</p></div>
+      <div class="d reveal"><div class="n">03</div><h3>Measurement isn't wired to what matters</h3><p>Spend can't yet be judged by the qualified calls it creates per channel, so budget follows noise, not pipeline.</p></div>
+      <div class="d reveal"><div class="n">04</div><h3>The channels run as silos</h3><p>LinkedIn never receives the intent signals Meta and Google could feed it, so each channel works alone and pays for it.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- INTEGRATED -->
+<section class="sec alt">
+  <div class="wrap">
+    <div class="lead reveal">
+      <h2>Three channels, <span class="thin">run as one</span> system.</h2>
+      <p class="sub">Not three separate reports. One engine where each channel does what it is best at and hands the next a warmer prospect.</p>
+    </div>
+    <div class="chan">
+      <div class="c reveal"><div class="role">Open the relationship</div><h3>LinkedIn</h3><p>Reaches and starts conversations with the exact people worth a call, the precise B2B targeting the others can't match.</p></div>
+      <div class="c reveal"><div class="role">Stay in front</div><h3>Meta</h3><p>Keeps the right prospects warm between touches with proof and story, so the offer lands when they're ready.</p></div>
+      <div class="c reveal"><div class="role">Capture the intent</div><h3>Google</h3><p>Catches the moment someone actively searches for the solution and routes that high-intent demand into the same engine.</p></div>
+    </div>
+    <div class="note reveal"><b>The compounding effect:</b> a prospect LinkedIn opens gets reinforced on Meta and converts on Google, or the reverse. One shared view of who is qualified moves budget toward booked calls and away from everything that only looks like progress.</div>
+  </div>
+</section>
+
+<!-- PLAN -->
+<section class="sec" id="plan">
+  <div class="wrap">
+    <div class="lead reveal">
+      <h2>The first <span class="thin">90 days</span>.</h2>
+      <p class="sub">Foundation first, calls fast, then scale what proves itself. Plain-language reporting throughout on what each channel is actually driving.</p>
+    </div>
+    <div class="plan">
+      <div class="ph reveal">
+        <div class="w">Days 1 - 15 · Foundation</div><div class="bar"></div>
+        <h3>Wire it to measure calls</h3>
+        <ul>
+          <li>Measurement set so every channel is judged by qualified calls, not clicks</li>
+          <li>Build the missing booking path so interest converts into a scheduled call</li>
+          <li>Define the qualified-call scorecard with your sales team</li>
+        </ul>
+      </div>
+      <div class="ph reveal">
+        <div class="w">Days 16 - 45 · Live</div><div class="bar"></div>
+        <h3>Turn LinkedIn on properly</h3>
+        <ul>
+          <li>Precise ICP targeting and an offer built for conversations, not downloads</li>
+          <li>Qualification gate live before any call reaches a rep's calendar</li>
+          <li>First booked, qualified calls flowing and reviewed against the scorecard</li>
+        </ul>
+      </div>
+      <div class="ph reveal">
+        <div class="w">Days 46 - 90 · Scale</div><div class="bar"></div>
+        <h3>Integrate and compound</h3>
+        <ul>
+          <li>Feed LinkedIn intent into Meta and Google retargeting; cut wasted spend</li>
+          <li>Optimise toward show-up rate and sales-accepted calls, not raw volume</li>
+          <li>Double down on the channel mix your pipeline proves is working</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CLOSE -->
+<section class="close">
+  <div class="wrap">
+    <div class="card reveal">
+      <div class="offer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20 6L9 17l-5-5" stroke-linecap="round" stroke-linejoin="round"/></svg>Complimentary teardown of your current setup within 24 - 48 hours</div>
+      <h2>Fewer names. Calls your reps are glad they took.</h2>
+      <p>If the fit is right, the first step is a short call to map this engine against your real numbers and show you exactly where pipeline is being left on the table.</p>
+      <a href="#core" class="btn btn-primary">Map my qualified-call engine
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3"><path d="M5 12h14M13 6l6 6-6 6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer><div class="wrap">B2B pipeline that a sales team actually wants.</div></footer>
+
+<script>
+  (function(){
+    var els=document.querySelectorAll('.reveal');
+    if(!('IntersectionObserver' in window)){els.forEach(function(e){e.classList.add('in')});return;}
+    var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}})},{threshold:.12,rootMargin:'0px 0px -6% 0px'});
+    els.forEach(function(e,i){e.style.transitionDelay=Math.min(i%3*60,150)+'ms';io.observe(e);});
+  })();
+</script>
+</body>
+</html>
